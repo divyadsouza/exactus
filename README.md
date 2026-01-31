@@ -26,7 +26,7 @@ Exactus addresses these challenges by developing a model that:
 
 ## Baseline Reference Model
 
-Exactus draws inspiration from and will be validated against [**NuExtract**](https://huggingface.co/numind/NuExtract) by NuMind—a state-of-the-art structured extraction model that closely aligns with our project objectives.
+Exactus draws inspiration from and will be validated against [**NuExtract-2.0**](https://huggingface.co/collections/numind/nuextract-20) by NuMind—a state-of-the-art structured extraction model that closely aligns with our project objectives.
 
 ### Why NuExtract as Baseline?
 
@@ -34,7 +34,7 @@ Exactus draws inspiration from and will be validated against [**NuExtract**](htt
 |----------------|-------------------|-------------------|
 | **Pure Extraction** | Model outputs only text present in the source document | Matches our zero-hallucination requirement |
 | **Schema-Driven** | Uses JSON templates to define extraction structure | Aligns with our structured output objective |
-| **Compact Size** | Available in 0.5B (tiny), 4B, and 7B variants | Validates small model viability |
+| **Compact Size** | Available in 0.5B (tiny), 2B, 4B, and 8B variants | Validates small model viability |
 | **Fine-Tuned Focus** | Specialized fine-tuning on synthetic extraction data | Supports our fine-tuning approach |
 
 ### NuExtract Model Family
@@ -43,17 +43,17 @@ Exactus draws inspiration from and will be validated against [**NuExtract**](htt
 |---------|------------|------------|---------------|
 | [NuExtract](https://huggingface.co/numind/NuExtract) | Phi-3-mini-4k-instruct | 4B | Original version, JSON extraction |
 | [NuExtract-v1.5](https://huggingface.co/numind/NuExtract-v1.5) | Phi-3.5-mini-instruct | 4B | Multilingual, long document support (10-20k tokens) |
-| [NuExtract-2.0](https://huggingface.co/numind/NuExtract-2.0-4B) | Qwen2.5-VL family | 2B/4B/8B | Multimodal (text + images), typed schemas |
+| [NuExtract-2.0](https://huggingface.co/collections/numind/nuextract-20) | Qwen2.5-VL family | 2B/4B/8B (with GPTQ and GGUF variants) | Multimodal (text + images), typed schemas |
 | [NuExtract-tiny](https://huggingface.co/numind/NuExtract-tiny-v1.5) | Qwen2.5-0.5B | 0.5B | Ultra-compact for resource-constrained environments |
 
 ### Key Takeaways for Exactus
 
 1. **Extraction-First Training**: NuExtract demonstrates that fine-tuning on high-quality synthetic extraction data produces models that avoid hallucination
 2. **Template-Based Prompting**: JSON schema templates effectively guide structured output generation
-3. **Size vs. Accuracy Trade-off**: The tiny (0.5B) to large (7B) variants show that smaller models can achieve extraction accuracy
+3. **Size vs. Accuracy Trade-off**: The tiny (0.5B) to large (8B) variants show that smaller models can achieve extraction accuracy
 4. **Temperature Matters**: NuExtract recommends temperature ≈ 0 for extraction—creativity is the enemy of accuracy
 
-> 📖 **Reference**: Exactus will benchmark against NuExtract to validate our training approach and measure improvement in areas like additional output formats (CSV, XML, YAML), CPU optimization, and adaptive structuring.
+> 📖 **Reference**: Exactus will benchmark against NuExtract-2.0 to validate our training approach and measure improvement in areas like additional output formats (CSV, XML, YAML), CPU optimization, and adaptive structuring.
 
 ---
 
@@ -103,7 +103,49 @@ project/
     └── specifications/   # Detailed model specs
 ```
 
-## Training Approach
+## Training Data
+
+The `data/training/` directory contains synthetic JSONL datasets designed to train models for accurate structured output generation. Each sample file represents different variations and complexity levels of extraction tasks.
+
+### Dataset Files
+
+| File | Description | Focus Areas |
+|------|-------------|-------------|
+| `training_data_sample1.jsonl` | Basic structured extraction examples | Simple JSON objects, arrays, nested structures for common domains like emails, vehicles, and recipes |
+| `training_data_sample2.jsonl` | Multi-format extraction with varied domains | JSON and XML outputs across diverse scenarios: orders, flights, products, meetings, patient records, reviews, shipping policies, sensor readings, contracts, and product specifications |
+| `training_data_sample3.jsonl` | Exact format specification with templates | Strict adherence to user-provided schemas, covering employee data, products, invoices, events, patient visits, configurations, orders, API responses, and property details |
+| `training_data_sample4.jsonl` | Complex nested structures | Advanced JSON/XML with deep nesting: project management, restaurant menus, system monitoring, and scientific experiments |
+| `training_data_sample5_edgecase.jsonl` | Edge cases with missing/null data | Handling scenarios where expected data is absent or null, such as successful operations (no errors), empty search results, and anonymous users with minimal information |
+
+### Data Characteristics
+
+- **Zero Hallucinations**: All outputs contain only information explicitly present in the input text
+- **Format Variety**: Supports JSON, XML, and structured text outputs
+- **Domain Diversity**: Covers business, healthcare, technology, scientific, and consumer domains
+- **Complexity Progression**: Files build from basic to advanced extraction scenarios
+- **Edge Case Coverage**: Includes handling of missing data, empty results, and null values
+- **Schema Adherence**: Emphasizes exact matching to specified output formats and structures
+
+### Open Datasets for Reference and Augmentation
+
+For additional training, validation, and benchmarking data, refer to [docs/open_data_ref.md](docs/open_data_ref.md), which documents publicly available open-source datasets suitable for structured extraction tasks. These can supplement the synthetic data and provide real-world examples for testing against baselines like NuExtract.
+
+## AI Assistant Skills
+
+This project leverages AI coding assistants with specialized skills to streamline development, validation, and maintenance workflows. Skills are modular capabilities that enhance productivity and ensure consistency across the project.
+
+### Available Skills
+
+| Skill | Description | Use Case |
+|-------|-------------|----------|
+| `conventional-commit` | Creates conventional commit messages and commits changes to git following conventional commit standards | Committing code changes with proper formatting and semantic versioning |
+| `agents-md-generator` | Analyzes repository structure and generates standardized AGENTS.md files that serve as contributor guides for AI agents | Producing contributor guides with LOC analysis and 5-section documentation covering overview, folder structure, patterns, conventions, and working agreements |
+| `make-skill-template` | Creates new Agent Skills for AI assistants from prompts or by duplicating templates | Scaffolding new AI capabilities with bundled resources, generating SKILL.md files with proper frontmatter, directory structure, and optional scripts/assets folders |
+| `training-data-validator` | Validates synthetic training data for structured output models, checking structural validity and semantic accuracy to ensure zero hallucinations | Verifying JSONL training data files, assessing data quality, and confirming AI-generated datasets contain only factual extractions without fabrications |
+
+### Skill Integration
+
+Skills are stored in the `.github/skills/` directory and can be invoked by AI assistants during development tasks. They help maintain code quality, validate training data, and automate common workflows specific to AI model development and structured output generation.
 
 Exactus can be created through two primary paths, depending on requirements:
 
@@ -182,31 +224,102 @@ Output: {
 
 ## Development Roadmap
 
+### Phase 0: Project Setup 🆕
+> Foundational infrastructure before training begins
+
+- [ ] **Set up development environment** — Create `requirements.txt`, `pyproject.toml`
+- [ ] **Establish coding standards** — Configure linting, formatting, type hints
+- [ ] **Set up CI/CD pipeline** — Automated testing on PRs
+- [ ] **Configure experiment tracking** — MLflow, Weights & Biases, or similar
+- [ ] **Generate AGENTS.md** — Use `agents-md-generator` skill
+- [ ] **Create documentation structure** — Initial project docs setup
+
 ### Phase 1: Data Foundation
-- [ ] Curate hallucination-free training data with source attribution
-- [ ] Create diverse structured output examples (JSON, CSV, XML, YAML)
-- [ ] Develop data augmentation pipelines for format variations
-- [ ] Build validation datasets for accuracy testing
+- [ ] **Curate hallucination-free training data** — Include source attribution for all examples
+- [ ] **Create diverse structured output examples** — JSON, CSV, XML, YAML formats
+- [ ] **Develop data augmentation pipelines** — Generate format variations programmatically
+- [ ] **Build validation datasets** — Separate data for accuracy testing
+- [ ] **Add negative examples dataset** — Train model to recognize when extraction isn't possible
+- [ ] **Create cross-format consistency tests** — Same source → JSON/XML/CSV/YAML semantic equivalence
+- [ ] **Build adversarial examples** — Deliberately misleading inputs to test hallucination resistance
+- [ ] **Consider multilingual extraction samples** — Evaluate if Exactus needs multilingual support
+- [ ] **Bootstrap data with open datasets** — Use datasets from `docs/open_data_ref.md` + `training-data-validator` to generate verified training data
 
 ### Phase 2: Model Training
-- [ ] Evaluate NuExtract variants as potential base/reference models
-- [ ] Select base models for distillation/fine-tuning (e.g., Phi-3.5, Qwen2.5)
-- [ ] Implement constrained training with anti-hallucination objectives
-- [ ] Develop format-specific output modules (extend beyond JSON to CSV, XML, YAML)
-- [ ] Train initial Exactus model versions
+- [ ] **Evaluate NuExtract variants** — Assess as potential base/reference models (different variants: 4B and 2B models)
+- [ ] **Select base models** — Choose for distillation/fine-tuning (e.g., Phi-4-instruct, Qwen3-4B, Qwen3-2B, and Qwen3-0.6B)
+- [ ] **Implement constrained training** — Anti-hallucination objectives
+- [ ] **Develop format-specific output modules** — Extend beyond JSON to CSV, XML, YAML
+- [ ] **Train initial Exactus model versions** — First training runs and evaluation
+- [ ] **Define base model selection criteria** — Quantitative thresholds before fine-tuning proceeds
+- [ ] **Specify anti-hallucination loss function** — Contrastive loss, constrained beam search, or custom objective
+- [ ] **Evaluate LoRA/QLoRA fine-tuning** — Parameter-efficient training crucial for CPU deployment
+- [ ] **Implement incremental training checkpoints** — Enable rollback and A/B testing
+- [ ] **Design synthetic data generation loop** — Teacher-student self-improvement cycle
+
+#### Base Model Candidates
+
+| Model | Parameters | Pros | Cons |
+|-------|------------|------|------|
+| Qwen3-0.6B | 0.6B | Ultra-small, advanced reasoning with thinking mode, Apache 2.0 | May lack capacity for complex schemas |
+| Qwen3-4B | 4B | Balanced size, strong reasoning and multilingual support, Apache 2.0 | Larger footprint |
+| Phi-4-mini-instruct | 3.8B | Strong reasoning, especially math and logic, MIT license | Larger footprint |
 
 ### Phase 3: Validation & Benchmarking
-- [ ] Create comprehensive hallucination detection test suite
-- [ ] Develop format compliance and schema adherence tests
-- [ ] Benchmark Exactus against NuExtract (accuracy, speed, size)
-- [ ] Compare performance on NuExtract's published benchmarks
-- [ ] Conduct adversarial testing for edge cases
+- [ ] **Create hallucination detection test suite** — Comprehensive coverage of fabrication scenarios
+- [ ] **Develop format compliance tests** — Schema adherence validation
+- [ ] **Benchmark against NuExtract** — Compare accuracy, speed, size
+- [ ] **Compare on published benchmarks** — Use NuExtract's evaluation datasets
+- [ ] **Conduct adversarial testing** — Edge cases and stress tests
+- [ ] **Define specific benchmark datasets** — SQuAD, NQ, TriviaQA extraction variants
+- [ ] **Create hallucination scoring rubric** — Quantify fabrication, distortion, omission separately
+- [ ] **Build regression test suite** — Automated tests on every training checkpoint
+- [ ] **Add human evaluation component** — Sample-based review for nuanced hallucination detection
+- [ ] **Create format edge case tests** — Malformed schemas, deep nesting, Unicode handling
+- [ ] **Implement latency profiling** — Per-token timing on Intel, ARM, Apple Silicon
+
+#### Expanded Evaluation Metrics
+
+| Category | Metric | Description |
+|----------|--------|-------------|
+| Accuracy | Schema Coverage Score | % of schema fields correctly populated |
+| Accuracy | Extraction Precision/Recall | Information retrieval framing |
+| Accuracy | Null Handling Accuracy | Correct behavior when data is missing |
+| Consistency | Format Switching Accuracy | Same content, different output formats |
 
 ### Phase 4: Optimization & Deployment
-- [ ] Apply model quantization for CPU efficiency
-- [ ] Optimize inference speed (target: production-ready latency)
-- [ ] Reduce memory footprint for resource-constrained environments
-- [ ] Package for easy deployment and integration
+- [ ] **Apply model quantization** — Optimize for CPU efficiency
+- [ ] **Optimize inference speed** — Target production-ready latency
+- [ ] **Reduce memory footprint** — Support resource-constrained environments
+- [ ] **Package for deployment** — Easy integration and distribution
+- [ ] **Evaluate quantization methods** — INT8, INT4, GPTQ, AWQ benchmarking
+- [ ] **Implement ONNX/OpenVINO conversion** — Critical for CPU inference optimization
+- [ ] **Define target latency SLA** — e.g., "< 100ms for 500-token input on 4-core CPU"
+- [ ] **Add batch inference support** — Production systems often batch requests
+- [ ] **Create Docker deployment** — Containerized inference server
+- [ ] **Implement API server** — FastAPI wrapper with OpenAPI spec
+- [ ] **Evaluate edge deployment** — llama.cpp or similar for embedded/mobile
+
+### Phase 5: Continuous Improvement 🆕
+> Post-deployment lifecycle management
+
+- [ ] **Implement user feedback loop** — Collect hallucination reports from users
+- [ ] **Create automated retraining pipeline** — Incorporate new validated data
+- [ ] **Establish semantic versioning** — Version model releases consistently
+- [ ] **Set up production monitoring** — Track latency, accuracy drift, error rates
+- [ ] **Document update procedures** — Model update and rollback workflows
+
+---
+
+## Key Gaps to Address
+
+| Category | Gap | Priority |
+|----------|-----|----------|
+| Infrastructure | No `requirements.txt` or dev setup | 🔴 High |
+| Data | Missing `validation/` and `test/` directories | 🔴 High |
+| Specificity | Vague targets ("production-ready latency") | 🟡 Medium |
+| Tooling | No experiment tracking configured | 🟡 Medium |
+| Testing | No automated CI/CD for training validation | 🟡 Medium |
 
 ## Getting Started
 
@@ -214,6 +327,7 @@ Output: {
 
 ### Prerequisites (Planned)
 - Python 3.11+
+- [uv](https://github.com/astral-sh/uv) - Fast Python package installer and resolver
 - PyTorch with CPU optimizations
 - 4GB+ RAM (8GB+ recommended)
 
@@ -223,8 +337,8 @@ Output: {
 git clone https://github.com/mlim-usfca/exactus.git
 cd exactus
 
-# Install dependencies
-pip install -r requirements.txt
+# Sync dependencies using uv (installs from pyproject.toml)
+uv sync
 ```
 
 ### Quick Start (Coming Soon)
