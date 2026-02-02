@@ -10,7 +10,38 @@ For learning objectives, see [docs/learning_outcomes.md](docs/learning_outcomes.
 
 The primary goal of Exactus is to create a high-quality language model optimized for structured output generation, designed to be served via standard inference servers such as Transformers, vLLM, Llama.cpp, and similar frameworks.
 
-A secondary, future goal is to develop APIs for Exactus, including both server-type APIs (e.g., RESTful services) and client-based APIs for easier integration into applications.
+A secondary, future goal is to develop APIs for Exactus, including both server-type APIs (e.g., RESTful services) and client-based APIs for easier integration into applications. Key advantages of API development include:
+
+1. **URL as source material**: Enable processing of web content directly via URLs
+2. **File path as source material**: Support local file processing through file system paths  
+3. **Memory / Cache**: Investigate adding memory or caching capabilities to the model or API for handling summaries or structural changes that reference the same source material(s)
+4. **Scalability & Concurrency**: Handle multiple simultaneous requests, enabling parallel processing of large document batches
+5. **Authentication & Security**: Built-in API keys, OAuth, and rate limiting to control access and prevent abuse
+6. **Standardized Interface**: RESTful design provides consistent endpoints for different operations (extract, summarize, validate)
+7. **Monitoring & Analytics**: Built-in logging, metrics, and error tracking for production deployment
+8. **Batch Processing**: Accept multiple URLs/files in a single request for efficient bulk operations
+9. **Streaming Responses**: Stream structured output as it's generated for large documents rather than waiting for completion
+10. **Cross-Platform Integration**: Any programming language can call the API, enabling broader adoption
+11. **Database Integration**: Connect to relational databases, NoSQL databases, and vector databases with schema/data dictionary definitions, enabling the AI to intelligently extract and structure data according to specified formats for RAG workflows and data transformation
+
+**Example API Usage:**
+```json
+{
+  "database": {
+    "type": "mongodb",
+    "connection": "mongodb://...",
+    "collection": "products"
+  },
+  "schema": {
+    "name": "string",
+    "price": "number", 
+    "features": ["string"],
+    "category": "string"
+  },
+  "query": {"category": "electronics"},
+  "output_format": "json"
+}
+```
 
 ## The Problem
 
