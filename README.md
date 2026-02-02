@@ -4,6 +4,14 @@
 
 **Exactus** is a specialized language model designed to generate precise, structured outputs without hallucinations. The project focuses on training, fine-tuning, and distilling models that prioritize factual accuracy, exact formatting, and efficient inference—particularly on CPU environments.
 
+For learning objectives, see [docs/learning_outcomes.md](docs/learning_outcomes.md). For key concepts, see [docs/key_concepts.md](docs/key_concepts.md). For a glossary of terms, see [docs/glossary.md](docs/glossary.md).
+
+## Project Goals
+
+The primary goal of Exactus is to create a high-quality language model optimized for structured output generation, designed to be served via standard inference servers such as Transformers, vLLM, Llama.cpp, and similar frameworks.
+
+A secondary, future goal is to develop APIs for Exactus, including both server-type APIs (e.g., RESTful services) and client-based APIs for easier integration into applications.
+
 ## The Problem
 
 Modern large language models (LLMs) are powerful but often unreliable for production data tasks:
@@ -11,9 +19,10 @@ Modern large language models (LLMs) are powerful but often unreliable for produc
 - **Hallucinations**: Models frequently generate plausible-sounding but fabricated information
 - **Inconsistent Structure**: Output formats vary unpredictably, breaking downstream pipelines
 - **Resource Heavy**: Many models require expensive GPU infrastructure for inference
+- **Slow Inference**: Large models have slow inference speeds, making them unsuitable for processing large volumes of data efficiently, especially on CPU or with limited GPU resources
 - **Over-Creative**: Models add interpretations or embellishments not present in source data
 
-For applications requiring **exact data extraction**, **faithful summarization**, and **structured output generation**, these issues are deal-breakers.
+For applications requiring **exact data extraction**, **faithful summarization**, **structured output generation**, and **efficient high-throughput processing**, these issues are deal-breakers.
 
 ## The Solution
 
@@ -21,7 +30,7 @@ Exactus addresses these challenges by developing a model that:
 
 1. **Never fabricates** — Only outputs information explicitly present in the input
 2. **Follows structure precisely** — Adheres to user-specified schemas or generates intelligent defaults
-3. **Runs efficiently** — Optimized for CPU inference without GPU dependency
+3. **Runs efficiently and fast** — Optimized for CPU inference without GPU dependency, delivering quick inference speeds for large data processing
 4. **Stays small and fast** — Distilled from larger reasoning models while preserving accuracy
 
 ## Baseline Reference Model
@@ -103,6 +112,8 @@ project/
     └── specifications/   # Detailed model specs
 ```
 
+**Note**: Some directories (e.g., `models/`, `validation/`, `test/`) are planned for future phases and not yet present in the current workspace.
+
 ## Training Data
 
 The `data/training/` directory contains synthetic JSONL datasets designed to train models for accurate structured output generation. Each sample file represents different variations and complexity levels of extraction tasks.
@@ -130,22 +141,11 @@ The `data/training/` directory contains synthetic JSONL datasets designed to tra
 
 For additional training, validation, and benchmarking data, refer to [docs/open_data_ref.md](docs/open_data_ref.md), which documents publicly available open-source datasets suitable for structured extraction tasks. These can supplement the synthetic data and provide real-world examples for testing against baselines like NuExtract.
 
-## AI Assistant Skills
+In addition to these open datasets, we may need to generate additional synthetic datasets using AI tools to cover specific domains, edge cases, or to increase dataset diversity. These AI-generated datasets should be validated using the `training-data-validator` skill to ensure they maintain zero hallucinations and structural accuracy.
 
-This project leverages AI coding assistants with specialized skills to streamline development, validation, and maintenance workflows. Skills are modular capabilities that enhance productivity and ensure consistency across the project.
+## AI Agents and Skills
 
-### Available Skills
-
-| Skill | Description | Use Case |
-|-------|-------------|----------|
-| `conventional-commit` | Creates conventional commit messages and commits changes to git following conventional commit standards | Committing code changes with proper formatting and semantic versioning |
-| `agents-md-generator` | Analyzes repository structure and generates standardized AGENTS.md files that serve as contributor guides for AI agents | Producing contributor guides with LOC analysis and 5-section documentation covering overview, folder structure, patterns, conventions, and working agreements |
-| `make-skill-template` | Creates new Agent Skills for AI assistants from prompts or by duplicating templates | Scaffolding new AI capabilities with bundled resources, generating SKILL.md files with proper frontmatter, directory structure, and optional scripts/assets folders |
-| `training-data-validator` | Validates synthetic training data for structured output models, checking structural validity and semantic accuracy to ensure zero hallucinations | Verifying JSONL training data files, assessing data quality, and confirming AI-generated datasets contain only factual extractions without fabrications |
-
-### Skill Integration
-
-Skills are stored in the `.github/skills/` directory and can be invoked by AI assistants during development tasks. They help maintain code quality, validate training data, and automate common workflows specific to AI model development and structured output generation.
+For guidance on using AI coding assistants to help with project development, data validation, and creating new skills (including for synthetic dataset generation), see [docs/ai_agents_guide.md](docs/ai_agents_guide.md).
 
 Exactus can be created through two primary paths, depending on requirements:
 
@@ -315,7 +315,7 @@ Output: {
 
 | Category | Gap | Priority |
 |----------|-----|----------|
-| Infrastructure | No `requirements.txt` or dev setup | 🔴 High |
+| Infrastructure | No `pyproject.toml` or dev setup | 🔴 High |
 | Data | Missing `validation/` and `test/` directories | 🔴 High |
 | Specificity | Vague targets ("production-ready latency") | 🟡 Medium |
 | Tooling | No experiment tracking configured | 🟡 Medium |
@@ -324,6 +324,13 @@ Output: {
 ## Getting Started
 
 > 🚧 **Project Status**: Exactus is currently in the planning and data preparation phase. Code and pre-trained models are not yet available.
+
+### Immediate Next Steps
+
+1. Review the learning outcomes in [docs/learning_outcomes.md](docs/learning_outcomes.md), key concepts in [docs/key_concepts.md](docs/key_concepts.md), and glossary in [docs/glossary.md](docs/glossary.md) to understand key concepts.
+2. Explore the training data samples in `data/training/` to see examples of zero-hallucination data.
+3. Familiarize yourself with AI agents and skills via [docs/ai_agents_guide.md](docs/ai_agents_guide.md).
+4. Start with Phase 0 tasks in the roadmap, such as setting up the development environment.
 
 ### Prerequisites (Planned)
 - Python 3.11+
@@ -343,19 +350,17 @@ uv sync
 
 ### Quick Start (Coming Soon)
 ```python
-from exactus import ExactusModel
+# Example using Transformers library (once Exactus model is released on Hugging Face)
+from transformers import pipeline
 
-model = ExactusModel.load("exactus-base")
-result = model.extract(
-    source="Your source text here...",
-    format="json",
-    schema={"name": str, "value": float}
-)
+extractor = pipeline("text-generation", model="usfca/exactus-base")
+result = extractor("Extract structured data as JSON from: [your source text here]")
+print(result)
 ```
 
 ## Contributing
 
-We welcome contributions to Exactus!
+We welcome contributions to Exactus! For assistance with contributions, use AI agents as described in [docs/ai_agents_guide.md](docs/ai_agents_guide.md) to help with coding, validation, and automation tasks.
 
 ### Data Contributions
 - Provide clean, factual text with clear source attribution
