@@ -4,7 +4,7 @@
 
 **Exactus** is a specialized language model designed to generate precise, structured outputs without hallucinations. The project focuses on training, fine-tuning, and distilling models that prioritize factual accuracy, exact formatting, and efficient inference—particularly on CPU environments.
 
-For learning objectives, see [docs/learning_outcomes.md](docs/learning_outcomes.md). For key concepts, see [docs/key_concepts.md](docs/key_concepts.md). For a glossary of terms, see [docs/glossary.md](docs/glossary.md).
+For learning objectives, see [docs/learning_outcomes.md](docs/learning_outcomes.md). For key concepts, see [docs/key_concepts.md](docs/key_concepts.md). For a glossary of terms, see [docs/glossary.md](docs/glossary.md). For fine-tuning and distillation strategies, see [docs/fine-tuning-vs-distillation.md](docs/fine-tuning-vs-distillation.md).
 
 ## Project Goals
 

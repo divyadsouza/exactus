@@ -24,6 +24,78 @@ Knowledge distillation is the process of transferring knowledge from a large "te
 
 **Relevance to Exactus**: Distillation allows creating CPU-efficient models that retain the factual accuracy of larger reasoning models.
 
+## Fine-Tuning Strategies for Zero-Hallucination
+
+Exactus employs specialized fine-tuning techniques to ensure outputs are grounded in source material and follow precise schemas.
+
+### Instruction Tuning with Negative Constraints
+
+Training models to explicitly handle missing information by rewarding "I don't know" responses over fabrication.
+
+**Key Components:**
+- **Negative Constraint Training**: 15–20% of samples include scenarios where requested data is absent
+- **Source-Grounded SFT**: Every output token must trace back to specific input coordinates
+- **Refusal Training**: Model learns to return `null` or empty structures instead of guessing
+
+### Targeted Layer & Attention Tuning
+
+Focusing fine-tuning on specific model components to preserve linguistic capabilities while enforcing structural accuracy.
+
+**Techniques:**
+- **Output Projection Focus**: Update final layers and embeddings for structural tokens (JSON keys, brackets)
+- **Attention Map Alignment**: Enforce sparsity constraints to prevent hallucinatory attention drift
+- **Layer Freezing**: Keep core reasoning layers intact while specializing output layers
+
+## Distillation Techniques for Structured Extraction
+
+Advanced distillation methods transfer extraction logic from large teacher models to efficient student models.
+
+### Teacher-Student Configuration
+
+| Role | Recommended Models | Rationale |
+| --- | --- | --- |
+| **Teacher** | Qwen2.5-72B / GPT-4o | Deep reasoning for complex schema mapping |
+| **Student** | Qwen3-0.6B / Qwen3-4B | Optimized for 4-bit CPU inference |
+
+### Sequence-Level & Feature Distillation
+
+**Primary (Sequence-Level)**: Teacher generates gold-standard extractions validated for 100% schema adherence.
+
+**Secondary (Attention Distillation)**: Student attention heads mimic teacher's focus on relevant source tokens.
+
+**Recursive Extraction Logic**: For complex schemas, train students to process data in chunks rather than monolithic structures.
+
+## Grammar-Constrained Decoding
+
+Inference-time mechanisms that enforce syntactic correctness regardless of training.
+
+**Key Methods:**
+- **FSM-Based Constraints**: Finite State Machines ensure valid token sequences (e.g., `{` must be followed by valid JSON tokens)
+- **Regex-Guided Extraction**: Restrict vocabulary for specific fields (dates, phone numbers) to match patterns
+- **Source-Vocabulary Restriction**: Output tokens limited to those present in source document plus structural syntax
+
+## Deterministic Sampling
+
+Eliminating randomness in generation to ensure reproducible, factual outputs.
+
+**Requirements:**
+- **Temperature = 0**: Strictly enforced to prevent creative deviations
+- **Greedy Decoding**: Select most probable token for CPU efficiency and accuracy
+- **No Beam Search**: Avoids complexity while maintaining factual generation
+
+## Quantization-Aware Training (QAT)
+
+Integrating quantization simulation during training to maintain accuracy at low precision.
+
+**Benefits:**
+- Pre-adapts models to 4-bit (INT4) rounding errors
+- Applied in final 10% of fine-tuning phase
+- Prevents accuracy degradation from post-training quantization
+
+**Target Runtimes:**
+- **ONNX Runtime**: Cross-platform CPU inference
+- **OpenVINO**: Intel-optimized performance
+
 ## Parameter-Efficient Fine-Tuning (LoRA/QLoRA)
 
 Rather than updating all model parameters (expensive and resource-intensive), parameter-efficient methods freeze pre-trained weights and add small trainable components.
@@ -49,6 +121,7 @@ Hallucinations occur when models generate content that diverges from input, cont
 **Key Strategies:**
 
 - **Constrained Decoding**: Limit generation vocabulary to tokens present in source text
+- **Grammar-Constrained Decoding**: Use FSM-based constraints and regex patterns to enforce syntactic validity
 - **Refusal-Aware Instruction Tuning (R-Tuning)**: Train models to say "I don't know" when information isn't available, rather than fabricating
 - **Temperature Control**: Use temperature ≈ 0 to minimize sampling randomness
 - **Schema Enforcement**: Validate outputs against schemas and reject invalid structures
@@ -74,7 +147,7 @@ Quantization reduces model precision from 32-bit floating-point to lower precisi
 
 **Types:**
 - **Post-Training Quantization (PTQ)**: Applied after training; fast but may lose accuracy
-- **Quantization-Aware Training (QAT)**: Simulates quantization during training; better accuracy
+- **Quantization-Aware Training (QAT)**: Simulates quantization during training; better accuracy for low-precision deployment
 - **Dynamic Quantization**: Quantizes at runtime; flexible but slower
 - **Static Quantization**: Quantizes at compile time; faster inference
 
