@@ -24,55 +24,57 @@ Knowledge distillation is the process of transferring knowledge from a large "te
 
 **Relevance to Exactus**: Distillation allows creating CPU-efficient models that retain the factual accuracy of larger reasoning models.
 
-## Fine-Tuning Strategies for Zero-Hallucination
+## Fine-Tuning for Absolute Zero Hallucination
 
-Exactus employs specialized fine-tuning techniques to ensure outputs are grounded in source material and follow precise schemas.
+Exactus employs specialized fine-tuning techniques to achieve 0% extrinsic hallucination through a "Verify-then-Generate" pipeline.
 
-### Instruction Tuning with Negative Constraints
+### Self-Interruption & Abstention Training
 
-Training models to explicitly handle missing information by rewarding "I don't know" responses over fabrication.
+Training models to trigger internal hard stops when source matches are uncertain.
 
 **Key Components:**
-- **Negative Constraint Training**: 15–20% of samples include scenarios where requested data is absent
-- **Source-Grounded SFT**: Every output token must trace back to specific input coordinates
-- **Refusal Training**: Model learns to return `null` or empty structures instead of guessing
+- **Learned Policy Refusal**: Fine-tune concept vectors using Activation Steering to enforce abstention from parametric guesses
+- **Abstention Tokens**: Introduce `[ABSENT]` token favored when attention confidence falls below threshold
+- **Structural Refusal**: Reward returning empty structures over fabrication
 
-### Targeted Layer & Attention Tuning
+### Attention-Anchored SFT
 
-Focusing fine-tuning on specific model components to preserve linguistic capabilities while enforcing structural accuracy.
+Mathematical grounding ensuring every token traces to source coordinates.
 
 **Techniques:**
-- **Output Projection Focus**: Update final layers and embeddings for structural tokens (JSON keys, brackets)
-- **Attention Map Alignment**: Enforce sparsity constraints to prevent hallucinatory attention drift
-- **Layer Freezing**: Keep core reasoning layers intact while specializing output layers
+- **Grounding Loss**: Penalize outputs where attention isn't peaked on corresponding source spans
+- **Coordinate-Aware Distillation**: Teacher provides character-level offsets for precise mapping
+- **Sparsity Constraints**: Prevent attention drift to latent space
 
-## Distillation Techniques for Structured Extraction
+## Distillation for Absolute Fidelity
 
-Advanced distillation methods transfer extraction logic from large teacher models to efficient student models.
+Advanced distillation methods ensure 100% accurate training data through consensus and verification.
 
-### Teacher-Student Configuration
+### Teacher Consensus Configuration
+
+Using ensemble agreement to guarantee gold-standard data.
 
 | Role | Recommended Models | Rationale |
 | --- | --- | --- |
-| **Teacher** | Qwen2.5-72B / GPT-4o | Deep reasoning for complex schema mapping |
+| **Teachers** | Qwen2.5-72B, GPT-4o, Claude 3.5 | Ensemble voting for consensus on extractions |
 | **Student** | Qwen3-0.6B / Qwen3-4B | Optimized for 4-bit CPU inference |
 
-### Sequence-Level & Feature Distillation
+### Sequence-Level Distillation with Verification
 
-**Primary (Sequence-Level)**: Teacher generates gold-standard extractions validated for 100% schema adherence.
+**Ensemble Labeling**: Only include samples where all teachers agree on extraction.
 
-**Secondary (Attention Distillation)**: Student attention heads mimic teacher's focus on relevant source tokens.
+**Cross-Format Verification**: Validate by extracting same source into JSON and XML, discarding mismatches.
 
-**Recursive Extraction Logic**: For complex schemas, train students to process data in chunks rather than monolithic structures.
+**Recursive Task Decomposition**: For small models, break complex schemas into "Split-Extract-Merge" micro-tasks.
 
 ## Grammar-Constrained Decoding
 
-Inference-time mechanisms that enforce syntactic correctness regardless of training.
+Inference-time mechanisms that enforce syntactic correctness and source grounding.
 
 **Key Methods:**
 - **FSM-Based Constraints**: Finite State Machines ensure valid token sequences (e.g., `{` must be followed by valid JSON tokens)
+- **Source-Vocabulary Masking**: Dynamically restrict logits to tokens present in source document
 - **Regex-Guided Extraction**: Restrict vocabulary for specific fields (dates, phone numbers) to match patterns
-- **Source-Vocabulary Restriction**: Output tokens limited to those present in source document plus structural syntax
 
 ## Deterministic Sampling
 
@@ -120,10 +122,12 @@ Hallucinations occur when models generate content that diverges from input, cont
 
 **Key Strategies:**
 
-- **Constrained Decoding**: Limit generation vocabulary to tokens present in source text
+- **Verify-then-Generate Pipeline**: Two-phase approach with coordinate verification before output
+- **Source-Vocabulary Masking**: Limit generation to tokens in source document
 - **Grammar-Constrained Decoding**: Use FSM-based constraints and regex patterns to enforce syntactic validity
-- **Refusal-Aware Instruction Tuning (R-Tuning)**: Train models to say "I don't know" when information isn't available, rather than fabricating
-- **Temperature Control**: Use temperature ≈ 0 to minimize sampling randomness
+- **Self-Interruption Training**: Train models to abstain when attention confidence is low
+- **Teacher Consensus**: Use ensemble agreement for training data validation
+- **Temperature Control**: Use temperature = 0 to minimize sampling randomness
 - **Schema Enforcement**: Validate outputs against schemas and reject invalid structures
 - **Uncertainty Calibration**: Teach models to recognize when they lack knowledge
 
@@ -155,7 +159,7 @@ Quantization reduces model precision from 32-bit floating-point to lower precisi
 - ONNX Runtime for cross-platform deployment
 - OpenVINO for Intel hardware optimization
 - llama.cpp for edge/embedded deployment
-- Target: < 100ms for 500-token input on 4-core CPU
+- Target: < 50ms for 500-token input on 4-core CPU
 
 ## Structured Output Formats
 

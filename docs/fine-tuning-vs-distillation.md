@@ -1,118 +1,93 @@
 # Exactus: Fine-Tuning & Distillation Strategy Guide
 
-**Version:** 1.2
+**Version:** 1.3
 
 **Last Updated:** 2026-02-08
 
 **Repository:** [mlim-usfca/exactus](https://github.com/mlim-usfca/exactus)
 
-**Status:** **Approved** (Incorporating Attention Distillation & Grammar Constraints)
+**Target:** **Absolute Zero Hallucination (0% Extrinsic Hallucination)**
 
 ---
 
-## Executive Summary
+## 1. The Zero-Hallucination Architecture
 
-Exactus prioritizes **accuracy over creativity** through zero-hallucination structured extraction optimized for CPU-efficient inference. This guide defines the transition from large-scale reasoning to specialized, constrained execution on edge-tier hardware.
+To achieve a 0% rate, Exactus uses a **"Verify-then-Generate"** pipeline. The model is no longer just predicting the next token; it is navigating a map of the source text.
 
----
+### 1.1 Self-Interruption & Abstention Training
 
-## 1. Fine-Tuning Strategies
+*Focus: Structural refusal.*
 
-### 1.1 Instruction Tuning with Negative Constraints
+* **Learned Policy Refusal**: Unlike a prompt-level instruction, we fine-tune the model's internal "concept vectors" (using techniques like **Activation Steering**) to trigger a hard stop if the attention mechanism cannot find a high-confidence match in the source text.
+* **Abstention Tokens**: We introduce a dedicated `[ABSENT]` token. The model is trained to favor this token over any parametric "guess" when the probability of a source match falls below a specific threshold (e.g., ).
 
-*Focus: Training the model to say "I don't know."*
+### 1.2 Attention-Anchored SFT
 
-* **Negative Constraint Training**: 15–20% of training samples must feature "distractor" prompts where the requested entity is absent. The model is penalized if it "guesses" and rewarded for returning `null` or `N/A` (preferably empty structure).
-* **Source-Grounded SFT**: Input-output pairs must include a `source_span` index, forcing the model to learn that every generated token must have a corresponding coordinate in the input text.
+*Focus: Mathematical grounding.*
 
-### 1.2 Targeted Layer & Attention Tuning
-
-*Focus: Anchoring structure without losing linguistics.*
-
-* **Output Projection Focus**: Focus weight updates on the final layers and embeddings. This "freezes" the core logic while specializing the vocabulary for structural tokens (JSON keys, brackets, CSV delimiters).
-* **Attention Map Alignment**: During fine-tuning, enforce a "sparsity constraint" where the model’s attention must peak on source tokens that match the target extraction, discouraging "hallucinatory" attention drift to empty latent space.
+* **Grounding Loss**: We implement a custom loss function that penalizes the model if it generates a non-structural token (like a name or date) while its attention is not primarily focused on the corresponding coordinates in the source document.
+* **Coordinate-Aware Distillation**: The Teacher model (GPT-4o/Qwen-72B) provides not just the extraction, but the **character-level offsets** of where it found the data. The Student (Exactus) is trained to predict these offsets as a "thinking" step before outputting the text.
 
 ---
 
-## 2. Distillation Architecture
+## 2. Deterministic Inference Mechanisms
 
-### 2.1 Teacher-Student Configuration
+Training alone cannot guarantee 0%. We use **Hard Constraints** at the engine level to bridge the final gap.
 
-| Role | Recommended Models | Rationale |
+### 2.1 Grammar-Constrained Decoding (FSM)
+
+* **State Machine Enforcement**: We use a Finite State Machine (FSM) to restrict the model's vocabulary at every step. If the schema expects an `integer`, the model's output logit for letters is mathematically set to zero.
+* **System-Level Syntax Guarantees**: This ensures 100% schema adherence (JSON/XML/YAML) by making "malformed output" physically impossible for the model to generate.
+
+### 2.2 Source-Vocabulary Masking
+
+* **Dynamic Token Masking**: During generation, the inference engine builds a "valid token list" from the source document. For any value-extraction field, the model is **masked**—it can only pick tokens that actually appear in the input text.
+* **Result**: Extrinsic hallucinations (inventing new facts) are eliminated because the model's "keyboard" only contains words from the source.
+
+---
+
+## 3. Distillation for Absolute Fidelity
+
+### 3.1 Teacher Consensus (Voting)
+
+To ensure the "Gold Standard" training data is actually 100% accurate:
+
+* **Ensemble Labeling**: We use three Teachers (e.g., Qwen-72B, GPT-4o, Claude 3.5). A sample is only added to the Exactus training set if all three models reach a consensus on the extraction.
+* **Cross-Format Verification**: The same source is extracted into JSON and XML. If the values don't match between formats, the sample is discarded.
+
+### 3.2 Recursive Task Decomposition
+
+For ultra-small models (0.6B), complex schemas increase hallucination risk.
+
+* **The "Split-Extract-Merge" Pattern**: The Exactus API automatically breaks large schemas into "Micro-Tasks." The 0.6B model only extracts 2-3 fields at a time, keeping its context window clean and focus sharp.
+
+---
+
+## 4. Optimization & Deployment
+
+| Requirement | Strategy | Tooling |
 | --- | --- | --- |
-| **Teacher** | Qwen2.5-72B / GPT-4o | Deep reasoning for complex schema mapping. |
-| **Student** | Qwen3-0.6B / Qwen3-4B | Optimized for 4-bit CPU inference (ONNX/OpenVINO). |
-
-### 2.2 Sequence-Level & Feature Distillation
-
-*Focus: Transferring "Extraction Logic" rather than "General Knowledge".*
-
-* **Primary (Sequence-Level)**: Use the Teacher to generate a "Gold Standard" dataset. Filter this data through the `training-data-validator` to ensure 100% schema adherence before the Student ever sees it.
-* **Secondary (Attention Distillation)**: Force the Student’s attention heads to mimic the Teacher’s. If the Teacher looks at "Price: $50" to extract a value, the Student is trained to align its attention weights to those same coordinates.
-* **Recursive Extraction Logic**: For the 0.6B model, the distillation process should include **"Task Decomposition"**. If a schema has >10 fields, train the student to handle it in "chunks" rather than a single massive JSON blob.
+| **0% Formatting Error** | FSM / Grammar Constraints | Outlines / Guidance |
+| **0% Extrinsic Hallucination** | Source-Vocab Masking | Custom Logit Processor |
+| **<100ms Latency** | INT4 Quantization + QAT | OpenVINO / ONNX |
+| **High Recall** | Multi-Pass Recursive Logic | Exactus Orchestrator |
 
 ---
 
-## 3. Inference-Time Constraint Mechanisms
+## Appendix A: Updated Quality Metrics
 
-### 3.1 Grammar-Constrained Decoding (The "Safety Rail")
-
-Regardless of training, the inference engine must enforce syntax.
-
-* **FSM-Based Constraints**: Integrate libraries like `Outlines` or `Guidance`. Use a Finite State Machine (FSM) to ensure that if the model generates a `{`, the only valid next tokens are `"`, whitespace, or `}`.
-* **Regex-Guided Extraction**: For specific fields (dates, phone numbers, IDs), the decoding process should restrict the model's vocabulary to tokens that match the target Regex pattern.
-* **Source-Vocabulary Restriction**: Dynamically restrict the model's output logit space so it can only choose tokens present in the source document + structural syntax tokens.
-
-### 3.2 Deterministic Sampling
-
-* **Temperature = 0**: Strictly enforced.
-* **Greedy Decoding**: Favored over Beam Search to minimize CPU overhead while ensuring the most probable (factual) token is selected.
-
----
-
-## 4. CPU-First Optimization
-
-### 4.1 Quantization-Aware Training (QAT)
-
-Traditional post-training quantization often breaks small models' ability to follow complex JSON.
-
-* **Action**: Apply QAT during the final 10% of the fine-tuning phase. This "pre-adapts" the model to the rounding errors of 4-bit (INT4) precision.
-
-### 4.2 Targeted Runtimes
-
-* **ONNX Runtime**: Primary target for cross-platform CPU.
-* **OpenVINO**: Specialized optimization for Intel-based server environments.
-
----
-
-## 5. Implementation Roadmap
-
-### Phase 1: Data Generation (Teacher-Led)
-
-* [ ] Generate 500k samples with 20% "Absent Data" scenarios.
-* [ ] Implement **Cross-Format Consistency**: One source text generates JSON, XML, and CSV versions to ensure format-agnostic extraction.
-
-### Phase 2: Training (Student-Led)
-
-* [ ] Execute **QLoRA** on Qwen3-0.6B using the Attention Alignment loss.
-* [ ] Perform **QAT** to prepare for INT4 deployment.
-
-### Phase 3: Validation (System-Level)
-
-* [ ] Benchmark **Model + Grammar Constraints** against NuExtract-2.0.
-* [ ] **SLA Check**: Ensure 500-token processing in <100ms on 4-core CPU.
-
----
-
-## Appendix A: Quality Metrics
-
-| Metric | Target | Description |
+| Metric | Target | Verification Mechanism |
 | --- | --- | --- |
-| **Schema Fidelity** | 100% | Guaranteed by Grammar-Constrained Decoding. |
-| **Hallucination Rate** | <0.1% | Measured by token-traceability to source document. |
-| **Recovery Rate** | >95% | Ability to correctly return `null` when data is missing. |
-| **Inference Latency** | <100ms | P90 target for standard CPU environments. |
+| **Hallucination Rate** | **0.0%** | Automated token-source alignment check |
+| **Schema Compliance** | **100%** | Forced FSM-based decoding |
+| **Null Accuracy** | **>99%** | Negative constraint testing (Absent Data) |
+| **Inference Latency** | **<50ms** | Per-token profiling on 4-core CPU |
 
 ---
 
-**Next Step:** Would you like me to create the **Phase 1 Python script** that utilizes a Teacher model to generate these "negative constraint" samples and validates them against a JSON schema?
+### Recommended Next Steps
+
+1. **Apply Guardrails**: I can generate a **Python Logit Processor** that you can plug into your inference server to implement the "Source-Vocabulary Masking" discussed above.
+2. **Setup Evaluation**: Would you like a script to benchmark the "Recursive Extraction" logic to see if it outperforms single-pass extraction on your current datasets?
+
+**Note on Memory/Settings:** Gemini will remember these strategy updates for our future work on Exactus. If you ever want to change how I remember your preferences or specific project details, you can manage your settings [here](https://gemini.google.com/saved-info).

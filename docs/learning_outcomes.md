@@ -30,7 +30,7 @@ By the end of this project, students will be able to:
 3. **Implement Knowledge Distillation Pipelines**: Develop skills in transferring capabilities from larger "teacher" models to smaller "student" models, preserving accuracy while reducing parameters for efficient inference.  
    *Checkpoint*: Distill a teacher model to a student and compare inference speeds.
 
-4. **Apply Anti-Hallucination Techniques**: Understand and implement strategies to prevent model hallucinations, including constrained decoding, refusal-aware instruction tuning (R-Tuning), and uncertainty calibration.  
+4. **Apply Anti-Hallucination Techniques**: Understand and implement strategies to prevent model hallucinations, including constrained decoding, self-interruption training, and uncertainty calibration.  
    *Checkpoint*: Test a model on adversarial inputs and apply one anti-hallucination technique.
 
 5. **Handle Structured Data Formats**: Learn to generate valid outputs in multiple formats (JSON, CSV, XML, YAML) with proper syntax and schema adherence, including handling edge cases like missing data and null values.  
