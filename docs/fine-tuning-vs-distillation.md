@@ -82,12 +82,3 @@ For ultra-small models (0.6B), complex schemas increase hallucination risk.
 | **Schema Compliance** | **100%** | Forced FSM-based decoding |
 | **Null Accuracy** | **>99%** | Negative constraint testing (Absent Data) |
 | **Inference Latency** | **<50ms** | Per-token profiling on 4-core CPU |
-
----
-
-### Recommended Next Steps
-
-1. **Apply Guardrails**: I can generate a **Python Logit Processor** that you can plug into your inference server to implement the "Source-Vocabulary Masking" discussed above.
-2. **Setup Evaluation**: Would you like a script to benchmark the "Recursive Extraction" logic to see if it outperforms single-pass extraction on your current datasets?
-
-**Note on Memory/Settings:** Gemini will remember these strategy updates for our future work on Exactus. If you ever want to change how I remember your preferences or specific project details, you can manage your settings [here](https://gemini.google.com/saved-info).
