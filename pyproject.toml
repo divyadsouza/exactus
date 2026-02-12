@@ -1,0 +1,138 @@
+[build-system]
+requires = ["setuptools>=68.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "exactus"
+version = "0.1.0"
+description = "A specialized language model for zero-hallucination structured output generation"
+readme = "README.md"
+requires-python = ">=3.11"
+license = {text = "MIT"}
+authors = [
+    {name = "USFCA ML & Inference Lab", email = "mlim@usfca.edu"}
+]
+keywords = [
+    "language-models",
+    "structured-output",
+    "zero-hallucination",
+    "data-extraction",
+    "cpu-optimization"
+]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+]
+
+dependencies = [
+    "torch>=2.0.0",  # Deep learning framework (CPU-optimized)
+    "transformers>=4.35.0",  # Hugging Face transformers
+    "pydantic>=2.0.0",  # Data validation
+    "pyyaml>=6.0",  # YAML parsing
+    "python-dotenv>=1.0.0",  # Environment variable management
+]
+
+[project.optional-dependencies]
+# For data preparation and validation
+data = [
+    "datasets>=2.14.0",  # Hugging Face datasets library
+    "jsonlines>=4.0.0",  # JSONL file handling
+]
+
+# For development and testing
+dev = [
+    "pytest>=7.4.0",  # Testing framework
+    "pytest-cov>=4.1.0",  # Code coverage
+    "black>=23.7.0",  # Code formatter
+    "ruff>=0.1.0",  # Fast Python linter
+    "mypy>=1.5.0",  # Static type checking
+    "isort>=5.12.0",  # Import sorting
+]
+
+# For experiment tracking
+experiments = [
+    "mlflow>=2.8.0",  # Experiment tracking (can swap for W&B later)
+    "tensorboard>=2.14.0",  # Visualization
+]
+
+# For model optimization
+optimization = [
+    "onnx>=1.14.0",  # ONNX model format
+    "onnxruntime>=1.16.0",  # ONNX runtime (CPU optimized)
+]
+
+# All development tools
+all = [
+    "exactus[data,dev,experiments,optimization]",
+]
+
+[project.urls]
+Repository = "https://github.com/mlim-usfca/exactus"
+Issues = "https://github.com/mlim-usfca/exactus/issues"
+Documentation = "https://github.com/mlim-usfca/exactus/blob/main/README.md"
+
+[tool.setuptools]
+packages = ["exactus"]
+
+[tool.black]
+line-length = 100
+target-version = ["py311"]
+include = '\.pyi?$'
+exclude = '''
+/(
+    \.git
+  | \.hg
+  | \.mypy_cache
+  | \.tox
+  | \.venv
+  | _build
+  | buck-out
+  | build
+  | dist
+)/
+'''
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+exclude = [
+    ".git",
+    ".venv",
+    "build",
+    "dist",
+    ".eggs",
+    "*.egg-info",
+]
+
+[tool.ruff.lint]
+select = [
+    "E",    # pycodestyle errors
+    "W",    # pycodestyle warnings
+    "F",    # Pyflakes
+    "I",    # isort
+    "C",    # flake8-comprehensions
+    "B",    # flake8-bugbear
+]
+ignore = [
+    "E501",  # Line too long (handled by black)
+    "B008",  # Function call in argument defaults
+]
+
+[tool.mypy]
+python_version = "3.11"
+warn_return_any = true
+warn_unused_configs = true
+disallow_untyped_defs = false
+disallow_incomplete_defs = false
+check_untyped_defs = true
+ignore_missing_imports = true
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py", "*_test.py"]
+addopts = "--cov=exactus --cov-report=html --cov-report=term-missing"
