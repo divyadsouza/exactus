@@ -142,3 +142,42 @@ cython_debug/
 .Trashes
 ehthumbs.db
 Thumbs.db
+
+# Shell config files
+.zshrc
+.bashrc
+.bash_profile
+.zprofile
+
+# Secrets and credentials
+.env*
+*.pem
+*.key
+secrets.yaml
+secrets.json
+
+# ML model weights and checkpoints
+*.bin
+*.pt
+*.pth
+*.ckpt
+*.safetensors
+*.gguf
+checkpoints/
+runs/
+
+# Dataset and data files
+data/raw/
+data/cache/
+*.jsonl
+*.parquet
+*.arrow
+*.csv
+
+# Experiment tracking
+wandb/
+mlruns/
+lightning_logs/
+
+# uv
+uv.lock
