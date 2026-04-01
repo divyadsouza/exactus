@@ -11,10 +11,10 @@ Datasets were selected based on their factual nature, diversity in domains, adap
 | Vital Articles Synthetic Information Extraction | Hugging Face (`nicpopovic/vital_articles_synthetic_information_extraction`) | ~5,010 samples | JSONL/Parquet | Wikipedia | High - Synthetic extraction pairs; direct analog to NuExtract's training data |
 | DocRED | Hugging Face (`thunlp/docred`) | ~5,000 documents | JSON | Wikipedia | High - Document-level relations; long-context extraction |
 | TACRED | Hugging Face (`dfki-nlp/tacred`) | ~106,000 examples | JSON/CSV | General web | High - Relation triples; factual and diverse |
-| CoNLL-2003 | Hugging Face (`conll2003`) | ~20,000 sentences | Text + tags | News | Medium - Entity extraction; convertible to JSON |
-| MultiWOZ | Hugging Face (`multi_woz_v22`) | ~10,000 dialogues | JSON | Dialogues | Medium - Slot-value structures; schema-driven |
+| CoNLL-2003 | Hugging Face (`eriktks/conll2003`) | ~20,000 sentences | Text + tags | News | Medium - Entity extraction; convertible to JSON |
+| MultiWOZ | Hugging Face (`pfb30/multi_woz_v22`) | ~10,000 dialogues | JSON | Dialogues | Medium - Slot-value structures; schema-driven |
 | SROIE | Kaggle (`urbikn/sroie-datasetv2`) | ~1,000 receipts | Text + XML/JSON | Receipts | Medium - Key-value extraction; real-world domain |
-| WikiTableQuestions | Hugging Face (`wikitablequestions`) | ~22,000 questions | Text + tables | Tables | Medium - Table-based outputs; hybrid tasks |
+| WikiTableQuestions | Hugging Face (`stanfordnlp/wikitablequestions`) | ~22,000 questions | Text + tables | Tables | Medium - Table-based outputs; hybrid tasks |
 
 ## Detailed Justifications and Use Cases
 
