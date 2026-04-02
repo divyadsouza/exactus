@@ -166,13 +166,17 @@ secrets.json
 checkpoints/
 runs/
 
+# Benchmark results (small, commit these)
+# !evaluation/results/*.json
+# !evaluation/results/*.csv
+
 # Dataset and data files
-data/raw/
-data/cache/
-*.jsonl
-*.parquet
-*.arrow
-*.csv
+# data/raw/
+# data/cache/
+# *.jsonl
+# *.parquet
+# *.arrow
+# *.csv
 
 # Experiment tracking
 wandb/
