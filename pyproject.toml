@@ -7,7 +7,7 @@ name = "exactus"
 version = "0.1.0"
 description = "A specialized language model for zero-hallucination structured output generation"
 readme = "README.md"
-requires-python = ">=3.11"
+requires-python = ">=3.9"
 license = {text = "MIT"}
 authors = [{name = "USFCA ML & Inference Lab"}]
 
