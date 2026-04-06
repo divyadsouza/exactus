@@ -7,6 +7,7 @@
   pip install torch torchvision --index-url https://download.pytorch.org/whl/cu118
   pip install -e .
 ## Run with 
+cd /raid/dmdsouza/exactus/notebooks
 jupyter nbconvert --to notebook --execute nuextract_benchmark.ipynb \
 --output nuextract_benchmark_output.ipynb \
 --ExecutePreprocessor.timeout=86400
