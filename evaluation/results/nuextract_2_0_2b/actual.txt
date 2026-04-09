@@ -1,0 +1,153 @@
+============================================================
+Row 0
+============================================================
+PROMPT:
+The executive branch is the part of government which executes or enforces the law.
+
+ACTUAL:
+{
+  "Concept": [],
+  "Government Entity": [],
+  "Government Institution": [],
+  "Relations": {
+    "executes": [
+      {
+        "subject": "the law",
+        "object": null
+      }
+    ],
+    "is_part_of": []
+  }
+}
+
+============================================================
+Row 1
+============================================================
+PROMPT:
+The news media or news industry are forms of mass media that focus on delivering news to the general public. These include news agencies, newspapers, news magazines, news channels etc.
+
+ACTUAL:
+{
+  "Mass Media": [],
+  "News": [],
+  "News Media": [
+    "news agencies",
+    "newspapers",
+    "news magazines",
+    "news channels"
+  ],
+  "Relations": {
+    "focuses_on_delivering": [
+      {
+        "subject": "news",
+        "object": "general public"
+      }
+    ],
+    "is_form_of": []
+  }
+}
+
+============================================================
+Row 2
+============================================================
+PROMPT:
+The Nuremberg principles are a set of guidelines for determining what constitutes a war crime. The document was created by the International Law Commission of the United Nations to codify the legal principles underlying the Nuremberg Trials of Nazi party members following World War II.
+
+ACTUAL:
+{
+  "Concept": [],
+  "Event": [],
+  "Group": [],
+  "Organization": [
+    "International Law Commission",
+    "United Nations"
+  ],
+  "Relations": {
+    "conducted_after": [
+      {
+        "subject": null,
+        "object": "Nuremberg Trials"
+      }
+    ],
+    "created_by": [
+      {
+        "subject": "International Law Commission",
+        "object": "United Nations"
+      }
+    ],
+    "part_of": [
+      {
+        "subject": "Nuremberg Principles",
+        "object": "guidelines for determining what constitutes a war crime"
+      }
+    ],
+    "used_to_determine_war_crimes_against": []
+  }
+}
+
+============================================================
+Row 3
+============================================================
+PROMPT:
+A referendum, plebiscite, or ballot measure is a direct vote by the electorate (rather than their representatives) on a proposal, law, or political issue. A referendum may be either binding (resulting in the adoption of a new policy) or advisory (functioning like a large-scale opinion poll).
+
+ACTUAL:
+{
+  "Group": [],
+  "Political Proposal": [],
+  "Voting Mechanism": [
+    {
+      "Type": "referendum",
+      "Function": "direct vote by the electorate"
+    }
+  ],
+  "Relations": {
+    "USED_BY": [],
+    "USED_FOR": []
+  }
+}
+
+============================================================
+Row 4
+============================================================
+PROMPT:
+Sundanese ( SOON-duh-NEEZ; endonym: ᮘᮞ ᮞᮥᮔ᮪ᮓ, romanized: basa Sunda, pronounced [bʌsʌ sʊndʌ]) is an Austronesian language native to the western hemisphere of the Indonesian island of Java, natively spoken by the Sundanese ethnic group. It has approximately 42 million native speakers; represent about 15% of Indonesia's total population.
+
+ACTUAL:
+{
+  "Country": [],
+  "Ethnic group": [
+    "Sudanese"
+  ],
+  "Geographical location": [
+    "western hemisphere of the Indonesian island of Java"
+  ],
+  "Language": [
+    "Sundanese"
+  ],
+  "Language family": [
+    "Austronesian"
+  ],
+  "Relations": {
+    "part of": [
+      {
+        "subject": null,
+        "object": "Indonesia"
+      }
+    ],
+    "spoken by": [
+      {
+        "subject": null,
+        "object": "native speakers"
+      }
+    ],
+    "spoken in": [
+      {
+        "subject": null,
+        "object": "Java"
+      }
+    ],
+    "subclass of": []
+  }
+}
+
