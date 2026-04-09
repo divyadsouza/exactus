@@ -1,0 +1,163 @@
+============================================================
+Row 0
+============================================================
+PROMPT:
+The executive branch is the part of government which executes or enforces the law.
+
+ACTUAL:
+{
+  "Concept": [
+    "executive branch"
+  ],
+  "Government Entity": [],
+  "Government Institution": [],
+  "Relations": {
+    "executes": [
+      {
+        "subject": "executive branch",
+        "object": "law"
+      }
+    ],
+    "is_part_of": []
+  }
+}
+
+============================================================
+Row 1
+============================================================
+PROMPT:
+The news media or news industry are forms of mass media that focus on delivering news to the general public. These include news agencies, newspapers, news magazines, news channels etc.
+
+ACTUAL:
+{
+  "Mass Media": [
+    "news agencies",
+    "newspapers",
+    "news magazines",
+    "news channels"
+  ],
+  "News": [],
+  "News Media": [],
+  "Relations": {
+    "focuses_on_delivering": [
+      {
+        "subject": "news media",
+        "object": "general public"
+      }
+    ],
+    "is_form_of": [
+      {
+        "subject": "news media",
+        "object": "mass media"
+      },
+      {
+        "subject": "news industry",
+        "object": "mass media"
+      }
+    ]
+  }
+}
+
+============================================================
+Row 2
+============================================================
+PROMPT:
+The Nuremberg principles are a set of guidelines for determining what constitutes a war crime. The document was created by the International Law Commission of the United Nations to codify the legal principles underlying the Nuremberg Trials of Nazi party members following World War II.
+
+ACTUAL:
+{
+  "Concept": [
+    "Nuremberg principles"
+  ],
+  "Event": [
+    "Nuremberg Trials",
+    "World War II"
+  ],
+  "Group": [
+    "Nazi party members"
+  ],
+  "Organization": [
+    "International Law Commission",
+    "United Nations"
+  ],
+  "Relations": {
+    "conducted_after": [
+      {
+        "subject": "Nuremberg Trials",
+        "object": "World War II"
+      }
+    ],
+    "created_by": [
+      {
+        "subject": "International Law Commission of the United Nations",
+        "object": "Nuremberg principles"
+      }
+    ],
+    "part_of": [],
+    "used_to_determine_war_crimes_against": []
+  }
+}
+
+============================================================
+Row 3
+============================================================
+PROMPT:
+A referendum, plebiscite, or ballot measure is a direct vote by the electorate (rather than their representatives) on a proposal, law, or political issue. A referendum may be either binding (resulting in the adoption of a new policy) or advisory (functioning like a large-scale opinion poll).
+
+ACTUAL:
+{
+  "Group": [],
+  "Political Proposal": [],
+  "Voting Mechanism": [],
+  "Relations": {
+    "USED_BY": [],
+    "USED_FOR": [
+      {
+        "subject": "electorate",
+        "object": "direct vote"
+      }
+    ]
+  }
+}
+
+============================================================
+Row 4
+============================================================
+PROMPT:
+Sundanese ( SOON-duh-NEEZ; endonym: ᮘᮞ ᮞᮥᮔ᮪ᮓ, romanized: basa Sunda, pronounced [bʌsʌ sʊndʌ]) is an Austronesian language native to the western hemisphere of the Indonesian island of Java, natively spoken by the Sundanese ethnic group. It has approximately 42 million native speakers; represent about 15% of Indonesia's total population.
+
+ACTUAL:
+{
+  "Country": [
+    "Indonesia"
+  ],
+  "Ethnic group": [
+    "Sundanese"
+  ],
+  "Geographical location": [
+    "western hemisphere of the Indonesian island of Java"
+  ],
+  "Language": [
+    "Sundanese"
+  ],
+  "Language family": [
+    "Austronesian"
+  ],
+  "Relations": {
+    "part of": [],
+    "spoken by": [
+      {
+        "subject": "Sundanese",
+        "object": "Sundanese"
+      }
+    ],
+    "spoken in": [
+      {
+        "subject": "Sundanese",
+        "object": "Java"
+      }
+    ],
+    "subclass of": []
+  }
+}
+

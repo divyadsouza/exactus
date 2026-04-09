@@ -1,0 +1,190 @@
+index,text,target,model_output,parse_error
+0,The executive branch is the part of government which executes or enforces the law.,"{
+  ""Concept"": [
+    ""law""
+  ],
+  ""Government Entity"": [
+    ""executive branch""
+  ],
+  ""Government Institution"": [
+    ""government""
+  ],
+  ""Relations"": {
+    ""executes"": [
+      {
+        ""subject"": ""executive branch"",
+        ""object"": ""law""
+      }
+    ],
+    ""is_part_of"": [
+      {
+        ""subject"": ""executive branch"",
+        ""object"": ""government""
+      }
+    ]
+  }
+}","{""Concept"": [""executive branch""], ""Government Entity"": [], ""Government Institution"": [], ""Relations"": {""executes"": [{""subject"": ""executive branch"", ""object"": ""law""}], ""is_part_of"": []}}",False
+1,"The news media or news industry are forms of mass media that focus on delivering news to the general public. These include news agencies, newspapers, news magazines, news channels etc.","{
+  ""Mass Media"": [
+    ""mass media""
+  ],
+  ""News"": [
+    ""news""
+  ],
+  ""News Media"": [
+    ""news media"",
+    ""news industry"",
+    ""news agencies"",
+    ""newspapers"",
+    ""news magazines"",
+    ""news channels""
+  ],
+  ""Relations"": {
+    ""focuses_on_delivering"": [
+      {
+        ""subject"": ""news media"",
+        ""object"": ""news""
+      },
+      {
+        ""subject"": ""news industry"",
+        ""object"": ""news""
+      }
+    ],
+    ""is_form_of"": [
+      {
+        ""subject"": ""news media"",
+        ""object"": ""mass media""
+      },
+      {
+        ""subject"": ""news industry"",
+        ""object"": ""mass media""
+      },
+      {
+        ""subject"": ""news agencies"",
+        ""object"": ""news media""
+      },
+      {
+        ""subject"": ""newspapers"",
+        ""object"": ""news media""
+      },
+      {
+        ""subject"": ""news magazines"",
+        ""object"": ""news media""
+      },
+      {
+        ""subject"": ""news channels"",
+        ""object"": ""news media""
+      }
+    ]
+  }
+}","{""Mass Media"": [""news agencies"", ""newspapers"", ""news magazines"", ""news channels""], ""News"": [], ""News Media"": [], ""Relations"": {""focuses_on_delivering"": [{""subject"": ""news media"", ""object"": ""general public""}], ""is_form_of"": [{""subject"": ""news media"", ""object"": ""mass media""}, {""subject"": ""news industry"", ""object"": ""mass media""}]}}",False
+2,The Nuremberg principles are a set of guidelines for determining what constitutes a war crime. The document was created by the International Law Commission of the United Nations to codify the legal principles underlying the Nuremberg Trials of Nazi party members following World War II.,"{
+  ""Concept"": [
+    ""Nuremberg principles""
+  ],
+  ""Event"": [
+    ""Nuremberg Trials"",
+    ""World War II""
+  ],
+  ""Group"": [
+    ""Nazi party members""
+  ],
+  ""Organization"": [
+    ""International Law Commission"",
+    ""United Nations""
+  ],
+  ""Relations"": {
+    ""conducted_after"": [
+      {
+        ""subject"": ""Nuremberg Trials"",
+        ""object"": ""World War II""
+      }
+    ],
+    ""created_by"": [
+      {
+        ""subject"": ""Nuremberg principles"",
+        ""object"": ""International Law Commission""
+      }
+    ],
+    ""part_of"": [
+      {
+        ""subject"": ""International Law Commission"",
+        ""object"": ""United Nations""
+      }
+    ],
+    ""used_to_determine_war_crimes_against"": [
+      {
+        ""subject"": ""Nuremberg principles"",
+        ""object"": ""Nazi party members""
+      }
+    ]
+  }
+}","{""Concept"": [""Nuremberg principles""], ""Event"": [""Nuremberg Trials"", ""World War II""], ""Group"": [""Nazi party members""], ""Organization"": [""International Law Commission"", ""United Nations""], ""Relations"": {""conducted_after"": [{""subject"": ""Nuremberg Trials"", ""object"": ""World War II""}], ""created_by"": [{""subject"": ""International Law Commission of the United Nations"", ""object"": ""Nuremberg principles""}], ""part_of"": [], ""used_to_determine_war_crimes_against"": []}}",False
+3,"A referendum, plebiscite, or ballot measure is a direct vote by the electorate (rather than their representatives) on a proposal, law, or political issue. A referendum may be either binding (resulting in the adoption of a new policy) or advisory (functioning like a large-scale opinion poll).","{
+  ""Group"": [
+    ""electorate""
+  ],
+  ""Political Proposal"": [
+    ""proposal""
+  ],
+  ""Voting Mechanism"": [
+    ""referendum""
+  ],
+  ""Relations"": {
+    ""USED_BY"": [
+      {
+        ""subject"": ""referendum"",
+        ""object"": ""electorate""
+      }
+    ],
+    ""USED_FOR"": [
+      {
+        ""subject"": ""referendum"",
+        ""object"": ""proposal""
+      }
+    ]
+  }
+}","{""Group"": [], ""Political Proposal"": [], ""Voting Mechanism"": [], ""Relations"": {""USED_BY"": [], ""USED_FOR"": [{""subject"": ""electorate"", ""object"": ""direct vote""}]}}",False
+4,"Sundanese ( SOON-duh-NEEZ; endonym: ᮘᮞ ᮞᮥᮔ᮪ᮓ, romanized: basa Sunda, pronounced [bʌsʌ sʊndʌ]) is an Austronesian language native to the western hemisphere of the Indonesian island of Java, natively spoken by the Sundanese ethnic group. It has approximately 42 million native speakers; represent about 15% of Indonesia's total population.","{
+  ""Country"": [
+    ""Indonesia""
+  ],
+  ""Ethnic group"": [
+    ""Sundanese ethnic group""
+  ],
+  ""Geographical location"": [
+    ""Indonesian island of Java""
+  ],
+  ""Language"": [
+    ""Sundanese""
+  ],
+  ""Language family"": [
+    ""Austronesian language""
+  ],
+  ""Relations"": {
+    ""part of"": [
+      {
+        ""subject"": ""Sundanese ethnic group"",
+        ""object"": ""Indonesia""
+      }
+    ],
+    ""spoken by"": [
+      {
+        ""subject"": ""Sundanese"",
+        ""object"": ""Sundanese ethnic group""
+      }
+    ],
+    ""spoken in"": [
+      {
+        ""subject"": ""Sundanese"",
+        ""object"": ""Indonesian island of Java""
+      }
+    ],
+    ""subclass of"": [
+      {
+        ""subject"": ""Sundanese"",
+        ""object"": ""Austronesian language""
+      }
+    ]
+  }
+}","{""Country"": [""Indonesia""], ""Ethnic group"": [""Sundanese""], ""Geographical location"": [""western hemisphere of the Indonesian island of Java""], ""Language"": [""Sundanese""], ""Language family"": [""Austronesian""], ""Relations"": {""part of"": [], ""spoken by"": [{""subject"": ""Sundanese"", ""object"": ""Sundanese""}], ""spoken in"": [{""subject"": ""Sundanese"", ""object"": ""Java""}], ""subclass of"": []}}",False
